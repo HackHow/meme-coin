@@ -12,3 +12,7 @@ func CreateMemeCoin(coin *model.MemeCoin) error {
 func GetMemeCoin(id uint) (*model.MemeCoin, error) {
 	return repository.GetMemeCoin(id)
 }
+
+func UpdateMemeCoin(id uint, description string) error {
+	return repository.UpdateMemeCoin(id, description)
+}

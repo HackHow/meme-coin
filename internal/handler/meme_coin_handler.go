@@ -81,3 +81,42 @@ func GetMemeCoin(c *gin.Context) {
 		"data":    response,
 	})
 }
+
+func UpdateMemeCoin(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    400,
+			"message": "Invalid meme coin ID",
+			"data":    nil,
+		})
+		return
+	}
+
+	var updateReq dtos.UpdateMemeCoinRequest
+	if err := c.ShouldBindJSON(&updateReq); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    400,
+			"message": "Invalid request payload",
+			"data":    nil,
+		})
+		return
+	}
+
+	if err := service.UpdateMemeCoin(uint(id), updateReq.Description); err != nil {
+		log.Printf("Failed to update meme coin: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    500,
+			"message": "Failed to update meme coin",
+			"data":    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "Meme coin updated successfully",
+		"data":    nil,
+	})
+}
