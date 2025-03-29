@@ -20,3 +20,7 @@ func UpdateMemeCoin(id uint, description string) error {
 func DeleteMemeCoin(id uint) error {
 	return repository.DeleteMemeCoin(id)
 }
+
+func PokeMemeCoin(id uint) error {
+	return repository.PokeMemeCoin(id)
+}

@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/HackHow/meme-coin/internal/model"
 	"github.com/HackHow/meme-coin/pkg/database"
+	"gorm.io/gorm"
 )
 
 func CreateMemeCoin(coin *model.MemeCoin) error {
@@ -24,4 +25,10 @@ func UpdateMemeCoin(id uint, description string) error {
 
 func DeleteMemeCoin(id uint) error {
 	return database.DB.Delete(&model.MemeCoin{}, id).Error
+}
+
+func PokeMemeCoin(id uint) error {
+	return database.DB.Model(&model.MemeCoin{}).
+		Where("id = ?", id).
+		UpdateColumn("popularity_score", gorm.Expr("popularity_score + ?", 1)).Error
 }
