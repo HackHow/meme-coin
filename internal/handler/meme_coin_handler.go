@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"log"
 	"net/http"
 	"strconv"
@@ -44,7 +42,6 @@ func CreateMemeCoin(c *gin.Context) {
 
 func GetMemeCoin(c *gin.Context) {
 	idStr := c.Param("id")
-	fmt.Print("idStr:", idStr)
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -56,8 +53,6 @@ func GetMemeCoin(c *gin.Context) {
 	}
 
 	coin, err := service.GetMemeCoin(uint(id))
-	fmt.Print("coin:", coin)
-	fmt.Print("err:", err)
 	if err != nil {
 		log.Printf("Failed to get meme coin: %v", err)
 		c.JSON(http.StatusNotFound, gin.H{
@@ -147,5 +142,34 @@ func DeleteMemeCoin(c *gin.Context) {
 		"code":    200,
 		"message": "Meme coin deleted successfully",
 		"data":    gin.H{"id": id},
+	})
+}
+
+func PokeMemeCoin(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    400,
+			"message": "Invalid meme coin ID",
+			"data":    nil,
+		})
+		return
+	}
+
+	if err := service.PokeMemeCoin(uint(id)); err != nil {
+		log.Printf("Failed to poke meme coin: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    500,
+			"message": "Failed to poke meme coin",
+			"data":    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "Meme coin poked successfully",
+		"data":    nil,
 	})
 }
