@@ -15,6 +15,7 @@ func InitRouter() *gin.Engine {
 		api.POST("/meme-coins", handler.CreateMemeCoin)
 		api.GET("/meme-coins/:id", handler.GetMemeCoin)
 		api.PATCH("/meme-coins/:id", handler.UpdateMemeCoin)
+		api.DELETE("/meme-coins/:id", handler.DeleteMemeCoin)
 	}
 
 	return r

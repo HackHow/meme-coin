@@ -120,3 +120,32 @@ func UpdateMemeCoin(c *gin.Context) {
 		"data":    nil,
 	})
 }
+
+func DeleteMemeCoin(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    400,
+			"message": "Invalid meme coin ID",
+			"data":    nil,
+		})
+		return
+	}
+
+	if err := service.DeleteMemeCoin(uint(id)); err != nil {
+		log.Printf("Failed to delete meme coin: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    500,
+			"message": "Failed to delete meme coin",
+			"data":    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "Meme coin deleted successfully",
+		"data":    gin.H{"id": id},
+	})
+}
