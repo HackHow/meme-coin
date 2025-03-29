@@ -17,3 +17,7 @@ func GetMemeCoin(id uint) (*model.MemeCoin, error) {
 
 	return &coin, nil
 }
+
+func UpdateMemeCoin(id uint, description string) error {
+	return database.DB.Model(&model.MemeCoin{}).Where("id = ?", id).Update("description", description).Error
+}
