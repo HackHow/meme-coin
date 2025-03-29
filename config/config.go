@@ -14,6 +14,7 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	ServerPort string
+	APIVersion string
 }
 
 var AppConfig Config
@@ -31,5 +32,6 @@ func LoadConfig() {
 		DBPassword: os.Getenv("DB_PASSWORD"),
 		DBName:     os.Getenv("DB_NAME"),
 		ServerPort: os.Getenv("SERVER_PORT"),
+		APIVersion: os.Getenv("API_VERSION"),
 	}
 }

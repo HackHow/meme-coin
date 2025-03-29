@@ -8,3 +8,7 @@ import (
 func CreateMemeCoin(coin *model.MemeCoin) error {
 	return repository.CreateMemeCoin(coin)
 }
+
+func GetMemeCoin(id uint) (*model.MemeCoin, error) {
+	return repository.GetMemeCoin(id)
+}
