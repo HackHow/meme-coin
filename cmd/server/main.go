@@ -5,24 +5,15 @@ import (
 	"log"
 
 	"github.com/HackHow/meme-coin/config"
+	"github.com/HackHow/meme-coin/internal/routers"
 	"github.com/HackHow/meme-coin/pkg/database"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	config.LoadConfig()
 	database.InitDB()
 
-	router := gin.Default()
-
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"code":    200,
-			"message": "Welcome to Meme Coin API!",
-			"data":    nil,
-		})
-	})
+	router := routers.InitRouter()
 
 	port := config.AppConfig.ServerPort
 	if port == "" {
