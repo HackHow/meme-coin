@@ -10,6 +10,7 @@ func InitRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.POST("/meme-coins", handler.CreateMemeCoin)
+	r.GET("/meme-coins/:id", handler.GetMemeCoin)
 
 	return r
 }
