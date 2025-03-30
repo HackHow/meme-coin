@@ -1,5 +1,17 @@
 # Meme Coin API
 
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Project Structure](#project-structure)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Environment and Configuration](#environment-and-configuration)
+- [Running the Application](#running-the-application)
+  - [Docker (Recommended)](#docker-recommended)
+  - [Locally](#locally)
+- [API Overview](#api-overview)
+- [Roadmap](#roadmap)
+
 ## Project Overview
 This project implements a Meme Coin API using Golang with the Gin Web Framework and GORM. It provides functionalities for creating, retrieving, updating, deleting, and "poking" meme coins (increasing their popularity). PostgreSQL is used as the database, and the application is containerized using Docker and managed with docker-compose.
 
@@ -40,17 +52,16 @@ This project implements a Meme Coin API using Golang with the Gin Web Framework 
 ```
 
 ## Tech Stack
-- Go: `1.24.1` (managed by [gvm](https://github.com/moovweb/gvm))
-- Web framework: `Gin v1.10.0`
-- Database: `PostgreSQL`
-- ORM: `GORM`
-- Migration CLI: `golang-migrate`
-- Containerization: `Docker`
+- Go: [`1.24.1`](https://go.dev/doc/install) (managed by [gvm](https://github.com/moovweb/gvm))
+- Web framework: [`Gin v1.10.0`](https://gin-gonic.com/)
+- Database: [`PostgreSQL`](https://www.postgresql.org/)
+- ORM: [`GORM`](https://gorm.io/)
+- Migration CLI: [`golang-migrate`](https://github.com/golang-migrate/migrate)
+- Containerization: [`Docker`](https://www.docker.com/)
 
 ## Prerequisites
-- [Go (`v1.24.1`)](https://go.dev/doc/install)
-- PostgreSQL (latest recommended)
-- [Docker](https://www.docker.com/)
+- Go (`v1.24.1`)
+- Docker (PostgreSQL will be launched via Docker Compose)
 - [golang-migrate](https://github.com/golang-migrate/migrate)
 
 ## Environment and Configuration
@@ -112,18 +123,18 @@ GET http://localhost:8080/health
 
 ## API Overview
 - **Create Meme Coin** (`POST /api/v1/meme-coins`):
-    - Inputs: `name` (required), `description` (optional)
-    - Creates a meme coin, initializes `popularity_score` to 0.
+  - Inputs: `name` (required), `description` (optional)
+  - Creates a meme coin, initializes `popularity_score` to 0.
 
 - **Get Meme Coin** (`GET /api/v1/meme-coins/:id`)
 
 - **Update Meme Coin** (`PATCH /api/v1/meme-coins/:id`):
-    - Inputs: `description`
+  - Inputs: `description`
 
 - **Delete Meme Coin** (`DELETE /api/v1/meme-coins/:id`)
 
 - **Poke Meme Coin** (`POST /api/v1/meme-coins/:id/poke`):
-    - Increases the `popularity_score` by 1.
+  - Increases the `popularity_score` by 1.
 
 ## Roadmap
 - [ ] Implement Logger
