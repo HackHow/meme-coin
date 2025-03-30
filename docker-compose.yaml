@@ -1,6 +1,6 @@
 services:
   app:
-    build: meme-coin-app:latest
+    build: .
     container_name: meme-coin-app
     ports:
       - "8080:8080"
@@ -25,3 +25,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "${DB_PORT:-5433}:5432"
+    volumes:
+      - pg_data:/var/lib/postgres
+
+volumes:
+  pg_data:

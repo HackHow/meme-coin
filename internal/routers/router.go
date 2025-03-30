@@ -19,5 +19,11 @@ func InitRouter() *gin.Engine {
 		api.POST("/meme-coins/:id/poke", handler.PokeMemeCoin)
 	}
 
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Hello World",
+		})
+	})
+
 	return r
 }
