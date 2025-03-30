@@ -1,28 +1,131 @@
 # Meme Coin API
 
-This is a Meme Coin API project developed using Golang and the Gin framework. This project provides a RESTful API for managing meme coins with a clear separation of concerns (handlers, models, services, repositories, middleware).
+## Project Overview
+This project implements a Meme Coin API using Golang with the Gin Web Framework and GORM. It provides functionalities for creating, retrieving, updating, deleting, and "poking" meme coins (increasing their popularity). PostgreSQL is used as the database, and the application is containerized using Docker and managed with docker-compose.
 
-## Features
+## Project Structure
+```plaintext
+.
+├── cmd
+│   └── server
+│       └── main.go
+├── config
+│   └── config.go
+├── docker-compose.yaml
+├── Dockerfile
+├── go.mod
+├── go.sum
+├── internal
+│   ├── dtos
+│   │   ├── meme_coin_request.go
+│   │   └── meme_coin_response.go
+│   ├── handler
+│   │   └── meme_coin_handler.go
+│   ├── middleware
+│   ├── model
+│   │   └── meme_coin.go
+│   ├── repository
+│   │   └── meme_coin_repository.go
+│   ├── routers
+│   │   └── router.go
+│   └── service
+│       └── meme_coin_service.go
+├── migrations
+│   ├── 20250329134617_create_meme_coins_table.down.sql
+│   └── 20250329134617_create_meme_coins_table.up.sql
+└── pkg
+    ├── database
+    │   └── db.go
+    └── logger
+```
 
-- Create, read, update, and delete meme coins.
-- Poke a meme coin to increase its popularity score.
-- Unified error handling and API response format.
-- PostgreSQL as the database with GORM as the ORM.
-- Docker containerization support (to be added in later stages).
+## Tech Stack
+- Go: `1.24.1` (managed by [gvm](https://github.com/moovweb/gvm))
+- Web framework: `Gin v1.10.0`
+- Database: `PostgreSQL`
+- ORM: `GORM`
+- Migration CLI: `golang-migrate`
+- Containerization: `Docker`
 
-## Requirements
+## Prerequisites
+- [Go (`v1.24.1`)](https://go.dev/doc/install)
+- PostgreSQL (latest recommended)
+- [Docker](https://www.docker.com/)
+- [golang-migrate](https://github.com/golang-migrate/migrate)
 
-- Golang 1.24.1
-- PostgreSQL (can be run via Docker)
-- Docker (for containerization)
+## Environment and Configuration
+Create a `.env` file (refer to `.env.example`) with these variables:
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=meme_user
+DB_PASSWORD=meme_pass
+DB_NAME=meme_coin
+SERVER_PORT=8080
+API_VERSION=v1
+```
 
-## Getting Started
+## Running the Application
 
-1. Clone the repository.
-2. Navigate to the project directory.
-3. Run `go run ./cmd/server` to start the server.
+### Docker (Recommended)
+1. Ensure your `.env` file is correctly set.
+2. Run Docker Compose:
+```bash
+docker-compose up -d
+```
+3. Verify application is running via API tools such as Postman or cURL:
+```
+GET http://localhost:8080/health
+```
 
-## Go Version Notes
+### Locally
 
-If you don't have Go 1.24.1 installed, please download it from [Go Downloads](https://golang.org/dl/). If you're using gvm, be aware that you might encounter installation order issues (e.g., you may need to install an older version first).
+1. Install dependencies:
+```bash
+go mod download
+```
+
+2. Install Migration CLI:
+```bash
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
+
+3. Run PostgreSQL via Docker Compose:
+```bash
+docker-compose up -d postgres
+```
+
+4. Run database migrations:
+```bash
+./migrate.sh up 1
+```
+
+5. Run the application:
+```bash
+go run ./cmd/server/main.go
+```
+
+6. Verify local application running via API tools such as Postman or cURL:
+```
+GET http://localhost:8080/health
+```
+
+## API Overview
+- **Create Meme Coin** (`POST /api/v1/meme-coins`):
+    - Inputs: `name` (required), `description` (optional)
+    - Creates a meme coin, initializes `popularity_score` to 0.
+
+- **Get Meme Coin** (`GET /api/v1/meme-coins/:id`)
+
+- **Update Meme Coin** (`PATCH /api/v1/meme-coins/:id`):
+    - Inputs: `description`
+
+- **Delete Meme Coin** (`DELETE /api/v1/meme-coins/:id`)
+
+- **Poke Meme Coin** (`POST /api/v1/meme-coins/:id/poke`):
+    - Increases the `popularity_score` by 1.
+
+## Roadmap
+- [ ] Implement Logger
+- [ ] Write unit and integration tests
 
