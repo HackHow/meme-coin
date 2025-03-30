@@ -1,5 +1,21 @@
-version: '3.8'
 services:
+  app:
+    build: meme-coin-app:latest
+    container_name: meme-coin-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      ServerPort: ${SERVER_PORT}
+      API_VERSION: ${API_VERSION}
+      DB_HOST: postgres
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?sslmode=disable"
+
   postgres:
     image: postgres:latest
     container_name: meme_coin_postgres
