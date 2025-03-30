@@ -1,0 +1,12 @@
+.git
+.gitignore
+
+README.md
+
+# Ignore docker-compose configuration file (typically used for local development and not needed in the build context)
+docker-compose.yaml
+
+# Ignore local environment variable files (if present)
+.env
+.DS_Store
+.idea/
