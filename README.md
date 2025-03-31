@@ -109,7 +109,7 @@ docker-compose up -d
 3. Verify application is running via API tools such as Postman or cURL:
 
 ```
-GET http://localhost:8080/health
+curl --location 'http://localhost:8080/healthz'
 ```
 
 ### Locally
