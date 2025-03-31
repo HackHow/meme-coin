@@ -57,12 +57,12 @@ as the database, and the application is containerized using Docker and managed w
 - `cmd/server`: Application entry point, starts the HTTP server.
 - `config`: Loads and manages environment variables and app configuration.
 - `internal`: Core application logic (split into handlers, services, repositories, etc.)
-  - `internal/dtos`: Defines request and response DTOs (Data Transfer Objects).
-  - `internal/handlers`: Gin HTTP handlers (controller layer).
-  - `internal/models`: GORM models representing DB schema.
-  - `internal/repositories`: Contains logic for data persistence and database queries.
-  - `internal/routers`: Initializes and groups application routes.
-  - `internal/services`: Business logic layer, performs operations between handlers and repositories.
+    - `internal/dtos`: Defines request and response DTOs (Data Transfer Objects).
+    - `internal/handlers`: Gin HTTP handlers (controller layer).
+    - `internal/models`: GORM models representing DB schema.
+    - `internal/repositories`: Contains logic for data persistence and database queries.
+    - `internal/routers`: Initializes and groups application routes.
+    - `internal/services`: Business logic layer, performs operations between handlers and repositories.
 - `pkg/database`: Manages database connection setup.
 - `migrations`: SQL migration scripts managed by `golang-migrate`.
 
@@ -152,22 +152,86 @@ curl --location 'http://localhost:8080/healthz'
 
 ## API Overview
 
-- **Create Meme Coin** (`POST /api/v1/meme-coins`):
-    - Inputs: `name` (required), `description` (optional)
-    - Creates a meme coin, initializes `popularity_score` to 0.
+### Endpoints Summary
 
-- **Get Meme Coin** (`GET /api/v1/meme-coins/:id`)
+| Method   | Endpoint                      | Description                             |
+|----------|-------------------------------|-----------------------------------------|
+| `POST`   | `/api/v1/meme-coins`          | Create a new meme coin                  |
+| `GET`    | `/api/v1/meme-coins/:id`      | Get a specific meme coin                |
+| `PATCH`  | `/api/v1/meme-coins/:id`      | Update a meme coin                      |
+| `DELETE` | `/api/v1/meme-coins/:id`      | Delete a meme coin                      |
+| `POST`   | `/api/v1/meme-coins/:id/poke` | Increase a meme coin's popularity score |
 
-- **Update Meme Coin** (`PATCH /api/v1/meme-coins/:id`):
-    - Inputs: `description`
+### Endpoint Details
 
-- **Delete Meme Coin** (`DELETE /api/v1/meme-coins/:id`)
+#### Create Meme Coin
 
-- **Poke Meme Coin** (`POST /api/v1/meme-coins/:id/poke`):
-    - Increases the `popularity_score` by 1.
+- **Endpoint**: `POST /api/v1/meme-coins`
+- **Request Body**:
+  ```json
+  {
+    "name": "HAHA",         // required
+    "description": "funny"  // optional
+  }
+  ```
+- **Description**: Creates a new meme coin with initial `popularity_score` of 0
+- **cURL Example**:
+  ```bash
+  curl --location 'http://localhost:8080/api/v1/meme-coins' \
+  --header 'Content-Type: application/json' \
+  --data '{
+      "name": "HAHA",
+      "description": "funny" 
+  }'
+  ```
+
+#### Get Meme Coin
+
+- **Endpoint**: `GET /api/v1/meme-coins/:id`
+- **Description**: Retrieves detailed information about a specific meme coin
+- **cURL Example**:
+  ```bash
+  curl --location 'http://localhost:8080/api/v1/meme-coins/1'
+  ```
+
+#### Update Meme Coin
+
+- **Endpoint**: `PATCH /api/v1/meme-coins/:id`
+- **Request Body**:
+  ```json
+  {
+    "description": "no-funny"  // field to update
+  }
+  ```
+- **Description**: Updates information for a specific meme coin
+- **cURL Example**:
+  ```bash
+  curl --location --request PATCH 'http://localhost:8080/api/v1/meme-coins/1' \
+  --header 'Content-Type: application/json' \
+  --data '{
+      "description": "no-funny" 
+  }'
+  ```
+
+#### Delete Meme Coin
+
+- **Endpoint**: `DELETE /api/v1/meme-coins/:id`
+- **Description**: Deletes a specific meme coin by ID
+- **cURL Example**:
+  ```bash
+  curl --location --request DELETE 'http://localhost:8080/api/v1/meme-coins/1'
+  ```
+
+#### Poke Meme Coin
+
+- **Endpoint**: `POST /api/v1/meme-coins/:id/poke`
+- **Description**: Increases the `popularity_score` of a specific meme coin by 1
+- **cURL Example**:
+  ```bash
+  curl --location --request POST 'http://localhost:8080/api/v1/meme-coins/1/poke'
+  ```
 
 ## Roadmap
 
 - [ ] Implement Logger
 - [ ] Write unit and integration tests
-
