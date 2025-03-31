@@ -126,7 +126,7 @@ func DeleteMemeCoin(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    200,
 		"message": "Meme coin deleted successfully",
-		"data":    gin.H{"id": id},
+		"data":    nil,
 	})
 }
 

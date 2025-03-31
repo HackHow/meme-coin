@@ -10,13 +10,11 @@ func CreateMemeCoin(coin *models.MemeCoin) error {
 	return database.DB.Create(coin).Error
 }
 
-func GetMemeCoin(id uint) (*models.MemeCoin, error) {
+func GetMemeCoin(id uint) (*models.MemeCoin, *gorm.DB) {
 	var coin models.MemeCoin
-	if err := database.DB.First(&coin, id).Error; err != nil {
-		return nil, err
-	}
+	result := database.DB.First(&coin, id)
 
-	return &coin, nil
+	return &coin, result
 }
 
 func UpdateMemeCoin(id uint, description string) *gorm.DB {
