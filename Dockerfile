@@ -2,34 +2,37 @@
 FROM golang:1.24.1-alpine AS builder
 WORKDIR /app
 
-# 安裝 git（如果需要）
-RUN apk update && apk add --no-cache git
-
-# 複製 go.mod 與 go.sum 並下載依賴
+# Copy go.mod and go.sum files and download dependencies
+# This layer is cached if the dependency files don't change
 COPY go.mod go.sum ./
 RUN go mod download
 
-# 複製所有程式碼到容器中
+# Copy all source code into the container
 COPY . .
 
-# 編譯應用程式，假設 main package 位於 cmd/server 目錄中
+# Compile the application
+# Using CGO_ENABLED=0 for a static binary that works in the minimal alpine image
 RUN CGO_ENABLED=0 GOOS=linux go build -o meme-coin ./cmd/server
 
-# Run stage
+# Run stage - using a minimal alpine image for smaller final image size
 FROM alpine:latest
 WORKDIR /root/
 
-# 安裝 curl 與 unzip 並下載 migrate CLI
+# Install curl and unzip, then download and configure migrate CLI
+# Combined into a single RUN to reduce image layers
 RUN apk add --no-cache curl unzip && \
     curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz | tar xvz -C /tmp && \
     mv /tmp/migrate /migrate && \
     chmod +x /migrate
 
-# 複製編譯後的二進位檔、migration 檔案與 entrypoint 脚本
+# Copy the compiled binary, migration files, and startup scripts from the builder stage
 COPY --from=builder /app/meme-coin .
 COPY migrations /migrations
 COPY wait-for-it.sh entrypoint.sh /
 RUN chmod +x /wait-for-it.sh /entrypoint.sh
 
+# Expose the application port
 EXPOSE 8080
+
+# Define the entrypoint script that will run when the container starts
 ENTRYPOINT ["/entrypoint.sh"]
