@@ -1,19 +1,19 @@
-package service
+package services
 
 import (
 	"github.com/HackHow/meme-coin/internal/common"
 	"github.com/HackHow/meme-coin/internal/dtos"
-	"github.com/HackHow/meme-coin/internal/model"
-	"github.com/HackHow/meme-coin/internal/repository"
+	"github.com/HackHow/meme-coin/internal/models"
+	"github.com/HackHow/meme-coin/internal/repositories"
 )
 
 func CreateMemeCoin(input dtos.CreateMemeCoinRequest) error {
-	coin := &model.MemeCoin{
+	coin := &models.MemeCoin{
 		Name:        input.Name,
 		Description: input.Description,
 	}
 
-	if err := repository.CreateMemeCoin(coin); err != nil {
+	if err := repositories.CreateMemeCoin(coin); err != nil {
 		return &common.AppError{
 			Code:    500,
 			Message: "Database error",
@@ -24,12 +24,12 @@ func CreateMemeCoin(input dtos.CreateMemeCoinRequest) error {
 	return nil
 }
 
-func GetMemeCoin(id uint) (*model.MemeCoin, error) {
-	return repository.GetMemeCoin(id)
+func GetMemeCoin(id uint) (*models.MemeCoin, error) {
+	return repositories.GetMemeCoin(id)
 }
 
 func UpdateMemeCoin(id uint, input dtos.UpdateMemeCoinRequest) error {
-	result := repository.UpdateMemeCoin(id, input.Description)
+	result := repositories.UpdateMemeCoin(id, input.Description)
 
 	if result.Error != nil {
 		return &common.AppError{
@@ -51,7 +51,7 @@ func UpdateMemeCoin(id uint, input dtos.UpdateMemeCoinRequest) error {
 }
 
 func DeleteMemeCoin(id uint) error {
-	result := repository.DeleteMemeCoin(id)
+	result := repositories.DeleteMemeCoin(id)
 
 	if result.Error != nil {
 		return &common.AppError{
@@ -73,7 +73,7 @@ func DeleteMemeCoin(id uint) error {
 }
 
 func PokeMemeCoin(id uint) error {
-	result := repository.PokeMemeCoin(id)
+	result := repositories.PokeMemeCoin(id)
 
 	if result.Error != nil {
 		return &common.AppError{

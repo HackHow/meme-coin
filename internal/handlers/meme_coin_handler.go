@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"log"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/HackHow/meme-coin/internal/common"
 	"github.com/HackHow/meme-coin/internal/dtos"
-	"github.com/HackHow/meme-coin/internal/service"
+	"github.com/HackHow/meme-coin/internal/services"
 )
 
 func CreateMemeCoin(c *gin.Context) {
@@ -23,7 +23,7 @@ func CreateMemeCoin(c *gin.Context) {
 		return
 	}
 
-	if err := service.CreateMemeCoin(req); err != nil {
+	if err := services.CreateMemeCoin(req); err != nil {
 		log.Printf("Failed to create meme coin: %v", err)
 		common.HandleError(c, err)
 		return
@@ -48,7 +48,7 @@ func GetMemeCoin(c *gin.Context) {
 		return
 	}
 
-	coin, err := service.GetMemeCoin(uint(id))
+	coin, err := services.GetMemeCoin(uint(id))
 	if err != nil {
 		log.Printf("Failed to get meme coin: %v", err)
 		common.HandleError(c, err)
@@ -91,7 +91,7 @@ func UpdateMemeCoin(c *gin.Context) {
 		return
 	}
 
-	err = service.UpdateMemeCoin(uint(id), req)
+	err = services.UpdateMemeCoin(uint(id), req)
 	if err != nil {
 		log.Printf("Failed to update meme coin: %v", err)
 		common.HandleError(c, err)
@@ -117,7 +117,7 @@ func DeleteMemeCoin(c *gin.Context) {
 		return
 	}
 
-	if err := service.DeleteMemeCoin(uint(id)); err != nil {
+	if err := services.DeleteMemeCoin(uint(id)); err != nil {
 		log.Printf("Failed to delete meme coin: %v", err)
 		common.HandleError(c, err)
 		return
@@ -142,7 +142,7 @@ func PokeMemeCoin(c *gin.Context) {
 		return
 	}
 
-	if err := service.PokeMemeCoin(uint(id)); err != nil {
+	if err := services.PokeMemeCoin(uint(id)); err != nil {
 		log.Printf("Failed to delete meme coin: %v", err)
 		common.HandleError(c, err)
 		return
