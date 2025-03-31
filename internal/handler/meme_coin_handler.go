@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/HackHow/meme-coin/internal/common"
 	"github.com/HackHow/meme-coin/internal/dtos"
 	"github.com/HackHow/meme-coin/internal/model"
 	"github.com/HackHow/meme-coin/internal/service"
@@ -81,31 +82,28 @@ func UpdateMemeCoin(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    400,
-			"message": "Invalid meme coin ID",
-			"data":    nil,
+		common.HandleError(c, &common.AppError{
+			Code:    400,
+			Message: "Invalid meme coin ID",
+			Data:    nil,
 		})
 		return
 	}
 
 	var updateReq dtos.UpdateMemeCoinRequest
 	if err := c.ShouldBindJSON(&updateReq); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    400,
-			"message": "Invalid request payload",
-			"data":    nil,
+		common.HandleError(c, &common.AppError{
+			Code:    400,
+			Message: "Invalid request payload",
+			Data:    nil,
 		})
 		return
 	}
 
-	if err := service.UpdateMemeCoin(uint(id), updateReq.Description); err != nil {
+	err = service.UpdateMemeCoin(uint(id), updateReq.Description)
+	if err != nil {
 		log.Printf("Failed to update meme coin: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    500,
-			"message": "Failed to update meme coin",
-			"data":    nil,
-		})
+		common.HandleError(c, err)
 		return
 	}
 
