@@ -9,13 +9,12 @@ import (
 
 	"github.com/HackHow/meme-coin/internal/common"
 	"github.com/HackHow/meme-coin/internal/dtos"
-	"github.com/HackHow/meme-coin/internal/model"
 	"github.com/HackHow/meme-coin/internal/service"
 )
 
 func CreateMemeCoin(c *gin.Context) {
-	var coin model.MemeCoin
-	if err := c.ShouldBindJSON(&coin); err != nil {
+	var req dtos.CreateMemeCoinRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    400,
 			"message": "Invalid request payload",
@@ -24,20 +23,16 @@ func CreateMemeCoin(c *gin.Context) {
 		return
 	}
 
-	if err := service.CreateMemeCoin(&coin); err != nil {
+	if err := service.CreateMemeCoin(req); err != nil {
 		log.Printf("Failed to create meme coin: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    500,
-			"message": "Failed to create meme coin",
-			"data":    nil,
-		})
+		common.HandleError(c, err)
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"code":    201,
 		"message": "Meme coin created successfully",
-		"data":    coin,
+		"data":    nil,
 	})
 }
 
@@ -45,10 +40,10 @@ func GetMemeCoin(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    400,
-			"message": "Invalid meme coin ID",
-			"data":    nil,
+		common.HandleError(c, &common.AppError{
+			Code:    400,
+			Message: "Invalid meme coin ID",
+			Data:    nil,
 		})
 		return
 	}
@@ -56,11 +51,7 @@ func GetMemeCoin(c *gin.Context) {
 	coin, err := service.GetMemeCoin(uint(id))
 	if err != nil {
 		log.Printf("Failed to get meme coin: %v", err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"code":    404,
-			"message": "Meme coin not found",
-			"data":    nil,
-		})
+		common.HandleError(c, err)
 		return
 	}
 
@@ -90,8 +81,8 @@ func UpdateMemeCoin(c *gin.Context) {
 		return
 	}
 
-	var updateReq dtos.UpdateMemeCoinRequest
-	if err := c.ShouldBindJSON(&updateReq); err != nil {
+	var req dtos.UpdateMemeCoinRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		common.HandleError(c, &common.AppError{
 			Code:    400,
 			Message: "Invalid request payload",
@@ -100,7 +91,7 @@ func UpdateMemeCoin(c *gin.Context) {
 		return
 	}
 
-	err = service.UpdateMemeCoin(uint(id), updateReq.Description)
+	err = service.UpdateMemeCoin(uint(id), req)
 	if err != nil {
 		log.Printf("Failed to update meme coin: %v", err)
 		common.HandleError(c, err)
