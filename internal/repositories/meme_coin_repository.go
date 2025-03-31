@@ -1,17 +1,17 @@
-package repository
+package repositories
 
 import (
-	"github.com/HackHow/meme-coin/internal/model"
+	"github.com/HackHow/meme-coin/internal/models"
 	"github.com/HackHow/meme-coin/pkg/database"
 	"gorm.io/gorm"
 )
 
-func CreateMemeCoin(coin *model.MemeCoin) error {
+func CreateMemeCoin(coin *models.MemeCoin) error {
 	return database.DB.Create(coin).Error
 }
 
-func GetMemeCoin(id uint) (*model.MemeCoin, error) {
-	var coin model.MemeCoin
+func GetMemeCoin(id uint) (*models.MemeCoin, error) {
+	var coin models.MemeCoin
 	if err := database.DB.First(&coin, id).Error; err != nil {
 		return nil, err
 	}
@@ -20,17 +20,17 @@ func GetMemeCoin(id uint) (*model.MemeCoin, error) {
 }
 
 func UpdateMemeCoin(id uint, description string) *gorm.DB {
-	return database.DB.Model(&model.MemeCoin{}).
+	return database.DB.Model(&models.MemeCoin{}).
 		Where("id = ?", id).
 		Update("description", description)
 }
 
 func DeleteMemeCoin(id uint) *gorm.DB {
-	return database.DB.Delete(&model.MemeCoin{}, id)
+	return database.DB.Delete(&models.MemeCoin{}, id)
 }
 
 func PokeMemeCoin(id uint) *gorm.DB {
-	return database.DB.Model(&model.MemeCoin{}).
+	return database.DB.Model(&models.MemeCoin{}).
 		Where("id = ?", id).
 		UpdateColumn("popularity_score", gorm.Expr("popularity_score + ?", 1))
 }
