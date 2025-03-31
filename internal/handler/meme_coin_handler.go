@@ -15,10 +15,10 @@ import (
 func CreateMemeCoin(c *gin.Context) {
 	var req dtos.CreateMemeCoinRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    400,
-			"message": "Invalid request payload",
-			"data":    nil,
+		common.HandleError(c, &common.AppError{
+			Code:    400,
+			Message: "Invalid request payload",
+			Data:    nil,
 		})
 		return
 	}
