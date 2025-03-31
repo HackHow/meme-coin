@@ -59,5 +59,23 @@ func DeleteMemeCoin(id uint) error {
 }
 
 func PokeMemeCoin(id uint) error {
-	return repository.PokeMemeCoin(id)
+	result := repository.PokeMemeCoin(id)
+
+	if result.Error != nil {
+		return &common.AppError{
+			Code:    500,
+			Message: "Database error",
+			Data:    nil,
+		}
+	}
+
+	if result.RowsAffected == 0 {
+		return &common.AppError{
+			Code:    404,
+			Message: "Meme coin not found",
+			Data:    nil,
+		}
+	}
+
+	return nil
 }
