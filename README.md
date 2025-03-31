@@ -147,7 +147,7 @@ go run ./cmd/server/main.go
 6. Verify local application running via API tools such as Postman or cURL:
 
 ```
-GET http://localhost:8080/health
+curl --location 'http://localhost:8080/healthz'
 ```
 
 ## API Overview
