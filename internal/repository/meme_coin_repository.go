@@ -25,8 +25,8 @@ func UpdateMemeCoin(id uint, description string) *gorm.DB {
 		Update("description", description)
 }
 
-func DeleteMemeCoin(id uint) error {
-	return database.DB.Delete(&model.MemeCoin{}, id).Error
+func DeleteMemeCoin(id uint) *gorm.DB {
+	return database.DB.Delete(&model.MemeCoin{}, id)
 }
 
 func PokeMemeCoin(id uint) error {
