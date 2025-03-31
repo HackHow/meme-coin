@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"github.com/HackHow/meme-coin/config"
@@ -9,6 +10,8 @@ import (
 
 func InitRouter() *gin.Engine {
 	r := gin.Default()
+
+	r.Use(cors.Default())
 
 	api := r.Group("/api/" + config.AppConfig.APIVersion)
 	{
@@ -19,9 +22,9 @@ func InitRouter() *gin.Engine {
 		api.POST("/meme-coins/:id/poke", handler.PokeMemeCoin)
 	}
 
-	r.GET("/health", func(c *gin.Context) {
+	r.GET("/healthz", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hello World",
+			"status": "OK",
 		})
 	})
 

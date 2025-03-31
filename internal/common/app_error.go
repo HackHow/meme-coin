@@ -8,9 +8,9 @@ import (
 )
 
 type AppError struct {
-	Code    int
-	Message string
-	Data    interface{}
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 func (e *AppError) Error() string {
