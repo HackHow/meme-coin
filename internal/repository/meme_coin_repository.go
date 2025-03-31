@@ -29,8 +29,8 @@ func DeleteMemeCoin(id uint) *gorm.DB {
 	return database.DB.Delete(&model.MemeCoin{}, id)
 }
 
-func PokeMemeCoin(id uint) error {
+func PokeMemeCoin(id uint) *gorm.DB {
 	return database.DB.Model(&model.MemeCoin{}).
 		Where("id = ?", id).
-		UpdateColumn("popularity_score", gorm.Expr("popularity_score + ?", 1)).Error
+		UpdateColumn("popularity_score", gorm.Expr("popularity_score + ?", 1))
 }

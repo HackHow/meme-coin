@@ -152,12 +152,8 @@ func PokeMemeCoin(c *gin.Context) {
 	}
 
 	if err := service.PokeMemeCoin(uint(id)); err != nil {
-		log.Printf("Failed to poke meme coin: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    500,
-			"message": "Failed to poke meme coin",
-			"data":    nil,
-		})
+		log.Printf("Failed to delete meme coin: %v", err)
+		common.HandleError(c, err)
 		return
 	}
 
